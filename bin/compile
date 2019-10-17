@@ -13,6 +13,19 @@ if [ -f "$ENV_DIR/SENSU_VERSION" ]; then
   SENSU_VERSION=$(cat $ENV_DIR/SENSU_VERSION);
 fi
 
+# Helper functions
+function topic() {
+  echo "-----> $*"
+}
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
 # Setup apt environment
 APT_DIR="$BUILD_DIR/.apt"
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"

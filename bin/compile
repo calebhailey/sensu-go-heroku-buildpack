@@ -41,6 +41,12 @@ DEPS="curl ca-certificates"
 apt-get $APT_OPTIONS update | indent
 apt-get $APT_OPTIONS -y -d install --reinstall $DEPS | indent
 
+# Install the Sensu Backend CA file
+if [ -f "$ENV_DIR/SENSU_BACKEND_TRUSTED_CA" ]; then
+  echo "Adding Sensu Backend trusted CA file..." | indent
+  cat $ENV_DIR/SENSU_BACKEND_TRUSTED_CA > $BUILD_DIR/sensu-backend.pem | indent
+fi
+
 # Install Sensu Agent
 topic "Installing the Sensu Agent"
 if [ -f "$ENV_DIR/SENSU_VERSION" ]; then

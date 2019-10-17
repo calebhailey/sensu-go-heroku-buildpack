@@ -26,15 +26,14 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p "$APT_DIR"
 
 # Install dependencies
-echo "Updating apt caches for dependencies"
-apt-get $APT_OPTIONS update 
-
-echo "Installing dependencies"
+topic "Installing dependencies"
 DEPS="curl ca-certificates"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall $DEPS
+apt-get $APT_OPTIONS update | indent
+apt-get $APT_OPTIONS -y -d install --reinstall $DEPS | indent
 
-curl -L https://s3-us-west-2.amazonaws.com/sensu.io/sensu-go/${SENSU_VERSION}/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -o $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz
-mkdir $CACHE_DIR/bin/
-tar -xzf $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -C $CACHE_DIR/bin/
-mv $CACHE_DIR/bin/sensu-agent $BUILD_DIR/
-rm $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz
+# Install Sensu Agent
+topic "Installing the Sensu Agent"
+curl -L https://s3-us-west-2.amazonaws.com/sensu.io/sensu-go/${SENSU_VERSION}/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -o $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz | indent
+tar -xzf $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -C $CACHE_DIR/ | indent
+mv $CACHE_DIR/sensu-agent $BUILD_DIR/ | indent
+rm $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz | indent

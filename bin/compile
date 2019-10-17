@@ -45,7 +45,7 @@ apt-get $APT_OPTIONS -y -d install --reinstall $DEPS | indent
 topic "Installing the Sensu Agent"
 if [ -f "$ENV_DIR/SENSU_BACKEND_TRUSTED_CA" ]; then
   echo "Adding Sensu Backend trusted CA file..." | indent
-  cat $ENV_DIR/SENSU_BACKEND_TRUSTED_CA > $BUILD_DIR/sensu-backend.pem | indent
+  cp $ENV_DIR/SENSU_BACKEND_TRUSTED_CA $BUILD_DIR/sensu-backend.pem
 fi
 
 if [ -f "$ENV_DIR/SENSU_VERSION" ]; then

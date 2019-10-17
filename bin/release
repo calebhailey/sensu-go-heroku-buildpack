@@ -1,7 +1,3 @@
 #!/bin/sh
 
-cat << EOF
----
-default_process_types:
-  agent: sensu-agent start --log-level=debug
-EOF
+echo "agent: sensu-agent start --log-level=debug" > $BUILD_DIR/Procfile

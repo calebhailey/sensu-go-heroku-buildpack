@@ -9,12 +9,9 @@ SENSU_VERSION=5.14.1
 SENSU_PLATFORM=linux
 SENSU_ARCH=amd64
 
-if [ -f "$ENV_DIR/SENSU_VERSION" ]; then
-  SENSU_VERSION=$(cat $ENV_DIR/SENSU_VERSION);
-fi
-
 # Helper functions
 function topic() {
+  echo ""
   echo "-----> $*"
 }
 
@@ -46,7 +43,19 @@ apt-get $APT_OPTIONS -y -d install --reinstall $DEPS | indent
 
 # Install Sensu Agent
 topic "Installing the Sensu Agent"
-curl -L https://s3-us-west-2.amazonaws.com/sensu.io/sensu-go/${SENSU_VERSION}/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -o $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz | indent
+if [ -f "$ENV_DIR/SENSU_VERSION" ]; then
+  SENSU_VERSION=$(cat $ENV_DIR/SENSU_VERSION);
+fi
+echo "Downloading Sensu Go binaries: https://s3-us-west-2.amazonaws.com/sensu.io/sensu-go/${SENSU_VERSION}/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz"
+curl -sL https://s3-us-west-2.amazonaws.com/sensu.io/sensu-go/${SENSU_VERSION}/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -o $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz | indent
+if [ -f $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz ]; then
+  echo "SUCCESS: download completed successfully ($CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz)" | indent
+else
+  echo "ERROR: could not download Sensu binaries archive." | indent
+  exit 1
+fi
 tar -xzf $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -C $CACHE_DIR/ | indent
 mv $CACHE_DIR/sensu-agent $BUILD_DIR/ | indent
 rm $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz | indent
+echo "SUCCESS: Installed $($BUILD_DIR/sensu-agent version)" | indent
+echo ""

@@ -62,5 +62,6 @@ fi
 tar -xzf $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz -C $CACHE_DIR/ | indent
 mv $CACHE_DIR/sensu-agent $BUILD_DIR/ | indent
 rm $CACHE_DIR/sensu-go_${SENSU_VERSION}_${SENSU_PLATFORM}_${SENSU_ARCH}.tar.gz | indent
+mkdir -p $BUILD_DIR/.cache/sensu-agent/
 echo "SUCCESS: Installed $($BUILD_DIR/sensu-agent version)" | indent
 echo ""

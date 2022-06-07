@@ -1,3 +1,4 @@
 #!/bin/sh
 
+BUILD_DIR="${1}"
 echo "agent: sensu-agent start --log-level=debug" > $BUILD_DIR/Procfile
